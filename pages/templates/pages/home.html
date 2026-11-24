@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil · School Manager{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <span class="eyebrow">{{ school_name }}</span>
+        <h1>Gérez votre école simplement.</h1>
+        <p>Inscrivez, modifiez et suivez vos étudiants et vos enseignants depuis une seule application.</p>
+        <div class="cta">
+            <a class="btn" href="{% url 'students:create' %}">+ Inscrire un étudiant</a>
+            <a class="btn btn-secondary" href="{% url 'students:list' %}">Voir la liste</a>
+        </div>
+    </section>
+
+    <section class="stats">
+        <div class="stat"><div class="ico">🎓</div><div><div class="num">{{ nb_students }}</div><div class="lbl">étudiant{{ nb_students|pluralize }}</div></div></div>
+        <div class="stat"><div class="ico">✅</div><div><div class="num">{{ nb_active }}</div><div class="lbl">actif{{ nb_active|pluralize }}</div></div></div>
+        <div class="stat"><div class="ico">👩‍🏫</div><div><div class="num">{{ nb_teachers }}</div><div class="lbl">enseignant{{ nb_teachers|pluralize }}</div></div></div>
+        <div class="stat"><div class="ico">🏫</div><div><div class="num">{{ nb_classes }}</div><div class="lbl">classe{{ nb_classes|pluralize }}</div></div></div>
+    </section>
+
+    <section class="grid-2">
+        <div class="panel">
+            <h2>Dernières inscriptions</h2>
+            <ul class="recent">
+                {% for s in recent %}
+                    <li>
+                        <div class="avatar c{{ forloop.counter|add:"0" }}">{{ s.first_name|slice:":1" }}{{ s.last_name|slice:":1" }}</div>
+                        <div class="who">
+                            <a href="{% url 'students:detail' s.id %}">{{ s.first_name }} {{ s.last_name }}</a>
+                            <small>{{ s.email }}</small>
+                        </div>
+                        <span class="badge badge-class">{{ s.classe }}</span>
+                    </li>
+                {% empty %}
+                    <li>Aucun étudiant inscrit pour le moment.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="panel">
+            <h2>Répartition par classe</h2>
+            {% for c in by_class %}
+                <div class="bar-row">
+                    <div class="top"><a href="{% url 'students:by_class' c.classe %}">{{ c.classe }}</a><span>{{ c.n }}</span></div>
+                    <div class="bar"><span style="width: {% widthratio c.n nb_students 100 %}%"></span></div>
+                </div>
+            {% empty %}
+                <p>Pas encore de données.</p>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

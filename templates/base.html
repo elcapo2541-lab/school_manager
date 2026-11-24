@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}School Manager{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'students/style.css' %}">
+</head>
+<body>
+    <header>
+        <a class="brand" href="{% url 'pages:home' %}">
+            <span class="logo">S</span>
+            <span>School<b>Manager</b></span>
+        </a>
+        <nav>
+            <a href="{% url 'pages:home' %}" {% if request.resolver_match.namespace == 'pages' and request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Accueil</a>
+            <a href="{% url 'students:list' %}" {% if request.resolver_match.namespace == 'students' %}class="active"{% endif %}>Étudiants</a>
+            <a href="{% url 'teachers:list' %}" {% if request.resolver_match.namespace == 'teachers' %}class="active"{% endif %}>Enseignants</a>
+            <a href="{% url 'pages:about' %}" {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>À propos</a>
+        </nav>
+    </header>
+    <main>
+        {% if messages %}
+            {% for message in messages %}
+                <p class="message {{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer>© School Manager · Projet de formation Django · ISEP-AT</footer>
+    <script>
+        document.querySelectorAll('.message').forEach(function (m) {
+            setTimeout(function () { m.classList.add('hide'); }, 5000);
+        });
+    </script>
+</body>
+</html>

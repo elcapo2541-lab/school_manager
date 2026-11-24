@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Enseignants · School Manager{% endblock %}
+
+{% block content %}
+    <h1>Enseignants</h1>
+    <div class="toolbar">
+        <a class="btn" href="{% url 'teachers:create' %}">+ Ajouter un enseignant</a>
+    </div>
+    {% if teachers %}
+        <div class="cards">
+            {% for teacher in teachers %}
+                <div class="tcard">
+                    <div class="avatar lg c{{ forloop.counter|divisibleby:2|yesno:"2,4" }}">{{ teacher.first_name|slice:":1" }}{{ teacher.last_name|slice:":1" }}</div>
+                    <h3>{{ teacher.first_name }} {{ teacher.last_name|upper }}</h3>
+                    <span class="badge badge-class">{{ teacher.subject }}</span>
+                    <p>{{ teacher.email }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">Aucun enseignant enregistré.</div>
+    {% endif %}
+{% endblock %}
